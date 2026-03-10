@@ -26,8 +26,9 @@ int linha[linhaTabuleiro] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}; // As posicoes de c
 // Declaração de variaveis para os navios
 int tamanhoNavio = 3; // Todos os navios globalmente possui um valor fixo de "3"
 
-// Variavel de verificação de posicao
-int respostaVerificacao; // Aqui guardara um valor "1" ou "0", o um, verdadeiro, e o dois, falso; dependendo da resposta da verificacao 
+// Variaveis de verificação de posicao
+int respostaVerificacaoNavio; // Aqui guardara um valor "1" ou "0", o um, verdadeiro, e o dois, falso; dependendo da resposta da verificacao para o navio
+int respostaVerificacaoHabilidade; // Aqui guardara um valor "1" ou "0", o um, verdadeiro, e o dois, falso; dependendo da resposta da verificacao para a habilidade
 
 // Variaveis de posicao do primeiro navio (horizontal)
 int linhaPosicaoNavioHorizontal; // A linha onde sera colocado o primeiro navio
@@ -76,7 +77,7 @@ void inserirNavios () {
     verificarPosicaoNavio(linhaPosicaoNavioHorizontal, colunaPosicaoNavioHorizontal);
 
     // Primeiro uma verificação para não permitir a sobreposições de navios
-    if (respostaVerificacao == 1) {
+    if (respostaVerificacaoNavio == 1) {
         printf("SOBREPOSIÇÃO DE NAVIOS OU POSIÇÃO FORA DA GRADE. OPERAÇÃO CANCELADA. [NAVIO HORIZONTAL]\n");
     } else {
         // Depois se não houver uma sobreposião, percorremos todo o tabuleiro
@@ -108,7 +109,7 @@ void inserirNavios () {
     verificarPosicaoNavio(linhaPosicaoNavioVertical, colunaPosicaoNavioVertical);
 
     // Aplicando a mesma lógica do inserir o navio na vertical aqui
-    if (respostaVerificacao == 1) {
+    if (respostaVerificacaoNavio == 1) {
         printf("SOBREPOSIÇÃO DE NAVIOS OU POSIÇÃO FORA DA GRADE. OPERAÇÃO CANCELADA. [NAVIO VERTICAL]\n");
     } else {
         for (int i = 0; i <= linhaTabuleiro; i++) {
@@ -133,7 +134,7 @@ void inserirNavios () {
     // Fazendo uma verificacao do valores das posicoes
     verificarPosicaoNavio(linhaPosicaoNavioDiagonalPrincipal, colunaPosicaoNavioDiagonalPrincipal);
     
-    if (respostaVerificacao == 1) {
+    if (respostaVerificacaoNavio == 1) {
         printf("SOBREPOSIÇÃO DE NAVIOS OU POSIÇÃO FORA DA GRADE. OPERAÇÃO CANCELADA. [NAVIO DIAGONAL PRINCIPAL]\n");
     } else {
         for (int i = 0; i <= linhaTabuleiro; i++) {
@@ -163,7 +164,7 @@ void inserirNavios () {
     // Fazendo uma verificacao do valores das posicoes
     verificarPosicaoNavio(linhaPosicaoNavioDiagonalSegundario, colunaPosicaoNavioDiagonalSecundario);
     
-    if (respostaVerificacao == 1) {
+    if (respostaVerificacaoNavio == 1) {
         printf("SOBREPOSIÇÃO DE NAVIOS OU POSIÇÃO FORA DA GRADE. OPERAÇÃO CANCELADA. [NAVIO DIAGONAL SECUNDARIO]\n");
     } else {
         for (int i = 0; i <= linhaTabuleiro; i++) {
@@ -234,16 +235,21 @@ void inserirHabilidades () {
     linhaHabilidadeCone = 5;
     colunaHabilidadeCone = 5;
 
-    for (int i = 0; i < linhaHabilidade; i++) {
-        for (int j = 0; j < colunaHabilidade; j++) {
-            // Calculando os destinos da linha e coluna, para assim achar o meio
-            int destinoLinha = linhaHabilidadeCone - metadeLinhas + i;
-            int destinoColuna = colunaHabilidadeCone - metadeColunas + j;
+    // Verificação para ver se o local de posicao da habilidade sai da grade 10x10
+    if (respostaVerificacaoHabilidade == 1) {
+        printf("LOCAL DE POSIÇÃO DA HABILIDADE FORA DA GRADE 10x10. OPERAÇÃO CANCELADA. (HABILIDADE CONE)\n");
+    } else {
+        for (int i = 0; i < linhaHabilidade; i++) {
+            for (int j = 0; j < colunaHabilidade; j++) {
+                // Calculando os destinos da linha e coluna, para assim achar o meio
+                int destinoLinha = linhaHabilidadeCone - metadeLinhas + i;
+                int destinoColuna = colunaHabilidadeCone - metadeColunas + j;
 
-            // Imprimindo os valores na matriz central "tabuleiro", descartando os "0"
-            if (destinoLinha >= 0 && destinoLinha < linhaTabuleiro && destinoColuna >= 0 && destinoColuna < colunaTabuleiro) {
-                if (habilidadeCone[i][j] != 0) {
-                    tabuleiro[destinoLinha][destinoColuna] = habilidadeCone[i][j];
+                // Imprimindo os valores na matriz central "tabuleiro", descartando os "0"
+                if (destinoLinha >= 0 && destinoLinha < linhaTabuleiro && destinoColuna >= 0 && destinoColuna < colunaTabuleiro) {
+                    if (habilidadeCone[i][j] != 0) {
+                        tabuleiro[destinoLinha][destinoColuna] = habilidadeCone[i][j];
+                    }
                 }
             }
         }
@@ -253,16 +259,20 @@ void inserirHabilidades () {
     linhaHabilidadeCruz = 2;
     colunaHabilidadeCruz = 1;
 
-    for (int i = 0; i < linhaHabilidade; i++) {
-        for (int j = 0; j < colunaHabilidade; j++) {
-            // Calculando os destinos da linha e coluna, para assim achar o meio
-            int destinoLinha = linhaHabilidadeCruz - metadeLinhas + i;
-            int destinoColuna = colunaHabilidadeCruz - metadeColunas + j;
-
-            // Imprimindo os valores na matriz central "tabuleiro", descartando os "0"
-            if (destinoLinha >= 0 && destinoLinha < linhaTabuleiro && destinoColuna >= 0 && destinoColuna < colunaTabuleiro) {
-                if (habilidadeCruz[i][j] != 0) {
-                    tabuleiro[destinoLinha][destinoColuna] = habilidadeCruz[i][j];
+    if (respostaVerificacaoHabilidade == 1) {
+        printf("LOCAL DE POSIÇÃO DA HABILIDADE FORA DA GRADE 10x10. OPERAÇÃO CANCELADA. (HABILIDADE CRUZ)\n");
+    } else {
+        for (int i = 0; i < linhaHabilidade; i++) {
+            for (int j = 0; j < colunaHabilidade; j++) {
+                // Calculando os destinos da linha e coluna, para assim achar o meio
+                int destinoLinha = linhaHabilidadeCruz - metadeLinhas + i;
+                int destinoColuna = colunaHabilidadeCruz - metadeColunas + j;
+    
+                // Imprimindo os valores na matriz central "tabuleiro", descartando os "0"
+                if (destinoLinha >= 0 && destinoLinha < linhaTabuleiro && destinoColuna >= 0 && destinoColuna < colunaTabuleiro) {
+                    if (habilidadeCruz[i][j] != 0) {
+                        tabuleiro[destinoLinha][destinoColuna] = habilidadeCruz[i][j];
+                    }
                 }
             }
         }
@@ -272,16 +282,20 @@ void inserirHabilidades () {
     linhaHabilidadeOctaedro = 2;
     colunaHabilidadeOctaedro = 7;
 
-    for (int i = 0; i < linhaHabilidade; i++) {
-        for (int j = 0; j < colunaHabilidade; j++) {
-            // Calculando os destinos da linha e coluna, para assim achar o meio
-            int destinoLinha = linhaHabilidadeOctaedro - metadeLinhas + i;
-            int destinoColuna = colunaHabilidadeOctaedro - metadeColunas + j;
-
-            // Imprimindo os valores na matriz central "tabuleiro", descartando os "0"
-            if (destinoLinha >= 0 && destinoLinha < linhaTabuleiro && destinoColuna >= 0 && destinoColuna < colunaTabuleiro) {
-                if (habilidadeOctaedro[i][j] != 0) {
-                    tabuleiro[destinoLinha][destinoColuna] = habilidadeOctaedro[i][j];
+    if (respostaVerificacaoHabilidade == 1) {
+        printf("LOCAL DE POSIÇÃO DA HABILIDADE FORA DA GRADE 10x10. OPERAÇÃO CANCELADA. (HABILIDADE OTCAEDRO)\n");
+    } else {
+        for (int i = 0; i < linhaHabilidade; i++) {
+            for (int j = 0; j < colunaHabilidade; j++) {
+                // Calculando os destinos da linha e coluna, para assim achar o meio
+                int destinoLinha = linhaHabilidadeOctaedro - metadeLinhas + i;
+                int destinoColuna = colunaHabilidadeOctaedro - metadeColunas + j;
+    
+                // Imprimindo os valores na matriz central "tabuleiro", descartando os "0"
+                if (destinoLinha >= 0 && destinoLinha < linhaTabuleiro && destinoColuna >= 0 && destinoColuna < colunaTabuleiro) {
+                    if (habilidadeOctaedro[i][j] != 0) {
+                        tabuleiro[destinoLinha][destinoColuna] = habilidadeOctaedro[i][j];
+                    }
                 }
             }
         }
@@ -291,12 +305,21 @@ void inserirHabilidades () {
 int verificarPosicaoNavio (int linha, int coluna) {
     // Primeira verificacao e de sobreposicao de navios, se houver um navio no local que é desejado colocar outro navio, é impedido
     if (tabuleiro[linha][coluna] == 3) {
-        respostaVerificacao = 1;
-    } else if (linha >= linhaTabuleiro || coluna >= colunaTabuleiro) { // Se não houver, mas sair da grade do tabuleiro 10x10, tambem é impedido 
-        respostaVerificacao = 1;
+        respostaVerificacaoNavio = 1;
+    } else if ((linha >= linhaTabuleiro || coluna >= colunaTabuleiro) || (linha < 0 || coluna < 0)) { // Se não houver, mas sair da grade do tabuleiro 10x10, tambem é impedido 
+        respostaVerificacaoNavio = 1;
     } else {
         // Se apos a verificação nao tiver nenhum comflito, é dado o "alvara" para posicionar o navio na posicao desejada
-        respostaVerificacao = 0;
+        respostaVerificacaoNavio = 0;
+    }
+}
+
+int verificarPosicaoHabilidade (int linha, int coluna) {
+    // Se as posicoes marcarem que saem da grade do tabuleiro 10x10, é impedido
+    if ((linha >= linhaTabuleiro || coluna >= colunaTabuleiro) || (linha < 0 || coluna < 0)) {
+        respostaVerificacaoHabilidade = 1;
+    } else {
+        respostaVerificacaoHabilidade = 0;
     }
 }
 
